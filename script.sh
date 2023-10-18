@@ -70,14 +70,34 @@ do
 bowtie2 -x ./refseqdata/refbowtieindex -q -1 ./seqdata/${base}_1.fq.gz -2 ./seqdata/${base}_2.fq.gz > ./aligned/${base}.sam
 done < ./temp/fastqlist_base.txt
 ##4d. Convert .sam files from bowtie2 to .bam via samtools
+while read base
+do
+samtools view -b -o ./aligned/${base}.bam ./aligned/${base}.sam
+done < ./temp/fastqlist_base.txt
 
 
 
-#5. 
+
+
+##4e. Generate index .bai files 
+while read base
+do
+samtools index -b ./aligned/${base}.bam 
+done < ./temp/fastqlist_base.txt
+
+
+samtools index -b ./aligned/Tco-999.bam
 
 
 
+#5. GENERATE COUNTS DATA VIA bedtools FROM REFSEQ .bed AND .bam 
 
+allbam=ls ./aligned/*.bam
+bedtools multicov -bams ./aligned/*.bam -bed ./refseqdata/TriTrypDB-46_TcongolenseIL3000_2019.bed > counts.txt
+
+
+
+bedtools coverage --counts 
 
 
 
