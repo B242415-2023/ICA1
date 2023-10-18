@@ -93,6 +93,17 @@ done < ./temp/fastqlist_base.txt
 
 
 #6. USER DEFINED GROUP SELECTIONS
+#avail groups: 
+#between replicates for variation
+#sample type
+#time
+#treatment
+#
+#
+#
+
+
+
 
 #7. GENERAL METHOD FOR CALCULATING MEANS OF COUNTS PER GENE OF GROUP DEFINED IN 6. 
 
@@ -103,6 +114,7 @@ done < ./temp/fastqlist_base.txt
 
 
 
+cat "/localdisk/home/s2600569/ICA01/counts/Tco-935_counts.txt" | awk '{FS="\t"}{if($6 >= 1){print $0}}' -
 
 
 
