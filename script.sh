@@ -77,16 +77,16 @@ done < ./temp/fastqlist_base.txt
 
 
 
-
-
 ##4e. Generate index .bai files 
-while read base
-do
-samtools index -b ./aligned/${base}.bam 
-done < ./temp/fastqlist_base.txt
+#while read base
+#do
+#samtools index -b ./aligned/${base}.bam 
+#done < ./temp/fastqlist_base.txt
 
+#samtools index -b ./aligned/Tco-999.bam
 
-samtools index -b ./aligned/Tco-999.bam
+samtools index -b ./aligned/Tco-999.bam ./aligned/Tco-999.bam.bai
+
 
 
 
