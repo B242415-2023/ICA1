@@ -74,38 +74,30 @@ while read base
 do
 samtools view -b -o ./aligned/${base}.bam ./aligned/${base}.sam
 done < ./temp/fastqlist_base.txt
-
-
-
 ##4e. Generate index .bai files 
-#while read base
-#do
-#samtools index -b ./aligned/${base}.bam 
-#done < ./temp/fastqlist_base.txt
-
-#samtools index -b ./aligned/Tco-999.bam
-
-samtools index -b ./aligned/Tco-999.bam ./aligned/Tco-999.bam.bai
-
+while read base
+do
+samtools sort --output-fmt BAM ./aligned/${base}.bam > ./aligned/${base}_sort.bam
+samtools index -b ./aligned/${base}_sort.bam
+done < ./temp/fastqlist_base.txt
 
 
 
 #5. GENERATE COUNTS DATA VIA bedtools FROM REFSEQ .bed AND .bam 
-
-allbam=ls ./aligned/*.bam
-bedtools multicov -bams ./aligned/*.bam -bed ./refseqdata/TriTrypDB-46_TcongolenseIL3000_2019.bed > counts.txt
-
-
-
-bedtools coverage --counts 
+mkdir counts
+while read base
+do
+bedtools coverage -counts -a ./refseqdata/TriTrypDB-46_TcongolenseIL3000_2019.bed -b ./aligned/${base}_sort.bam > ./counts/${base}_counts.txt
+done < ./temp/fastqlist_base.txt
 
 
 
+#6. USER DEFINED GROUP SELECTIONS
+
+#7. GENERAL METHOD FOR CALCULATING MEANS OF COUNTS PER GENE OF GROUP DEFINED IN 6. 
 
 
-
-
-
+##########SANDBOX################
 
 
 
