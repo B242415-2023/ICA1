@@ -114,7 +114,7 @@ done < ./temp/fastqlist_base.txt
 
 
 
-cat "/localdisk/home/s2600569/ICA01/counts/Tco-935_counts.txt" | awk '{FS="\t"}{if($6 >= 1){print $0}}' -
+#cat "/localdisk/home/s2600569/ICA01/counts/Tco-935_counts.txt" | awk '{FS="\t"}{if($6 >= 1){print $0}}' -
 
 
 
