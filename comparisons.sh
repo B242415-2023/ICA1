@@ -31,6 +31,8 @@ grep -w ${search1} ./temp/replicateindexref.txt > ./temp/search1temp.txt
   done < ./temp/search2.txt
 done < ./temp/search1.txt
 
+rm -f ./temp/search/*_0_Induced
+
 ##1e.gather only counts of each gene of each sample
 ls ./temp/search > ./temp/searchdirindex.txt
 mkdir ./counts/groups
@@ -57,13 +59,60 @@ cat ./temp/search/${file} | awk '{FS=" ";}{print $1}' - > ./temp/repgroups.txt
   do
   paste ./counts/reptotal/${file}_all.txt ./counts/groups/${repgroups:0:3}-${repgroups:3}_counts_only.txt > ./counts/reptotal/${file}_all1.txt && mv -f ./counts/reptotal/${file}_all1.txt ./counts/reptotal/${file}_all.txt
 
-  echo ./counts/${repgroups:0:3}-${repgroups:3}_counts.txt
-  echo ${file}
+  echo "gathering: ./counts/${repgroups:0:3}-${repgroups:3}_counts.txt"
+  echo "group: ${file}"
+  echo "into: ./counts/reptotal/${file}_all.txt"
+  echo "----------------"
   
   done < ./temp/repgroups.txt
 done < ./temp/searchdirindex.txt
+#1g. get means of each condition
+while read file
+do
+cat ./temp/search/${file} | awk '{FS=" ";}{print $1}' - > ./temp/${file}repgroups.txt
+done < ./temp/searchdirindex.txt
+
+ls ./counts/reptotal > ./temp/reptotalindex.txt
+mkdir ./counts/replicatemeans
+
+while read reptotalindex
+do
+sum=0
+>./counts/replicatemeans/${reptotalindex}
+
+  while read gene
+  do
+  sum=0
+  
+    for replicate in ${gene}
+    do
+    sum=$(($sum + $replicate))
+    done
+  
+  echo $sum >> ./counts/replicatemeans/${reptotalindex}
+  echo ${gene}
+  echo ${reptotalindex}
+  
+  done < ./counts/reptotal/${reptotalindex}
+done < ./temp/reptotalindex.txt
+########### divide by wc -l of Tco of grep reptotalindex fqfiles to get mean OR just wc or ./temp/${file}repgroups.txt
 
 
+#2. User selected groups
+#3. Group fold changes
+###use flags to select for conditions, then do it 'over' a flag eg. time, cellline etc.
+
+
+
+
+
+
+##quality control for fail threshold for script.sh, then remove replicate for bad reads. talk about decreased sample size in report if need to remove. 
+##talk about trimming in report (basically point out --trim is there but dont use bc. papers say its bad, find papers)
+#alignment scores from bowtie2 (bowtie2) >> file, then search for alignment scores and append to quality report
+#fold change beginning = 0, = fold change =inf, add small amount to denom BUT talk in report how that will inflate fold change
+#talk about normalization in report, even if not asked. relate to trans splicing
+# 
 
 
 
