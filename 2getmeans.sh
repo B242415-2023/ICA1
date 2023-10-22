@@ -2,7 +2,7 @@
 
 #ASK FOR FAIL THRESHOLD
 failtheshold=3
-echo "Enter threshold, inclusive, for max no. of fails allowed in sequencing quality report. (Input integer)"
+echo "Enter threshold for max no. ,inclusive, of fails allowed in sequencing quality report. (Input integer)"
 echo "Will remove samples will more fails than threshold"
 echo "(Default fail threshold = 3)"
 read failthreshold
