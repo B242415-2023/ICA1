@@ -1,5 +1,12 @@
 #!/bin/bash
 
+#ASK FOR FAIL THRESHOLD
+failtheshold=3
+echo "Enter threshold, inclusive, for max no. of fails allowed in sequencing quality report. (Input integer)"
+echo "Will remove samples will more fails than threshold"
+echo "(Default fail threshold = 3)"
+read failthreshold
+
 #1. Mean the replicates for each condition
 ##1a. create list of all unique conditions
 echo "Creaing conditions list..."
@@ -12,6 +19,17 @@ uniq - > ./temp/replicateindex.txt
 echo "Creating reference index..."
 touch ./temp/replicateindexref.txt
 awk 'BEGIN{FS="\t";}{if(NR!=1){print $1,$2,$4,$5}}' ./seqdata/Tco2.fqfiles > ./temp/replicateindexref.txt
+
+##1bi. Removing samples with low quality, higher fails in quality check than threshold.
+echo "Removing samples with low quality sequencing in either/or end1, end2"
+
+awk 'BEGIN{FS="\t"}{if(NR != 1){print $0}}' ./temp/reportfinal.txt > ./temp/reportfinalnocol.txt
+awk -v thresh="$failthreshold" 'BEGIN{FS="\t"}{if($3 >= thresh || $6 >= thresh){print $0}}' ./temp/reportfinalnocol.txt > ./temp/failthresholdrm.txt
+cut -d " " -f 1 ./temp/failthresholdrm.txt > ./temp/failthresholdrm1.txt
+
+
+grep -v -f ./temp/failthresholdrm1.txt ./temp/replicateindexref.txt > ./temp/replicateindexreftemp.txt
+mv -f ./temp/replicateindexreftemp.txt ./temp/replicateindexref.txt
 
 ##1c. separate search into 3 files for each condition
 echo "Creating search index..."
@@ -42,6 +60,7 @@ done < ./temp/search1.txt
 
 rm -f ./temp/search/*_0_Induced
 
+
 ##1e.gather only counts of each gene of each sample
 echo "Gathering counts for each gene of each sample..."
 
@@ -60,6 +79,7 @@ cat ./temp/search/${file} | awk '{FS=" ";}{print $1}' - > ./temp/repgroups.txt
   
   done < ./temp/repgroups.txt
 done < ./temp/searchdirindex.txt
+
 
 #1f. append counts of each condition to one file
 echo "Appending counts of each condition to one file"
@@ -111,12 +131,13 @@ denom=0
     denom=$((${denom} + 1))
     done
     
-  mean=$((${sum} / ${denom}))
+  mean=echo "${sum} / ${denom}" | bc -l
   echo "${sum} / ${denom}" | bc -l >> ./counts/replicatemeans/${reptotalindex}
   echo "Counts: ${gene}"
   echo "Sum: $sum"
   echo "No. of replicates: $denom"
-  echo "Mean: ${mean}"
+  echo "Mean:"
+  echo ${mean}
   echo "Repindex: ${reptotalindex}"
   echo "------------------------------"
   
@@ -154,19 +175,5 @@ source ./3foldchange.sh
 #talk about normalization in report, even if not asked. relate to trans splicing
 # run.sh file to point towards everything
 
-
-
-
-#1. USER DEFINED GROUP SELECTIONS
-
-
-
-
-#2. GENERAL METHOD FOR CALCULATING MEANS OF COUNTS PER GENE OF GROUP DEFINED IN 1. 
-
-
-#3. CALCULATING VARIATION FOR REPLICATES
-##3a. Gather number of replicates 
-#search for same clone and treatment, then take range for all replicates 
 
 

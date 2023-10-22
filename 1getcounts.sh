@@ -62,6 +62,7 @@ echo "Appending counts onto ./temp/reportfinal.txt..."
 
 paste ./temp/report.txt ./temp/end1_pass.txt | paste - ./temp/end1_fail.txt | paste - ./temp/end1_warn.txt |paste - ./temp/end2_pass.txt |paste - ./temp/end2_fail.txt |paste - ./temp/end2_warn.txt > ./temp/reportfinal.txt
 
+cp ./temp/reportfinal.txt ./RESULTS/fastqcSummaryReport.txt
 
 ##############user input for no. of fails threshold to remove seq data?
 ##############flag bad seq data and input base no. for trimming?
@@ -134,30 +135,6 @@ echo "Generated!"
 
 #6. Onto next step 2getmeans.sh
 source ./2getmeans.sh
-
-#6. USER DEFINED GROUP SELECTIONS
-#avail groups: 
-#between replicates for variation
-#sample type
-#time
-#treatment
-#
-#
-#
-
-
-
-
-#7. GENERAL METHOD FOR CALCULATING MEANS OF COUNTS PER GENE OF GROUP DEFINED IN 6. 
-
-
-##########SANDBOX################
-
-
-
-
-
-#cat "/localdisk/home/s2600569/ICA01/counts/Tco-935_counts.txt" | awk '{FS="\t"}{if($6 >= 1){print $0}}' -
 
 
 

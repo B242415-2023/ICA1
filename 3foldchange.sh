@@ -33,7 +33,7 @@ then
   
     while read rangecondi
     do
-    echo ${rangecondi}_${quertime}_${quertreat} > ./temp/rangecompare.txt
+    echo ${rangecondi}_${quertime}_${quertreat} >> ./temp/rangecompare.txt
   
     done < ./temp/rangecondi.txt
   
@@ -43,7 +43,7 @@ then
   
     while read rangecondi
     do
-    echo ${quersample}_${rangecondi}_${quertreat} > ./temp/rangecompare.txt
+    echo ${quersample}_${rangecondi}_${quertreat} >> ./temp/rangecompare.txt
   
     done < ./temp/rangecondi.txt
   
@@ -53,7 +53,7 @@ then
   
     while read rangecondi
     do
-    echo ${quersample}_${quertime}_${rangecondi} > ./temp/rangecompare.txt
+    echo ${quersample}_${quertime}_${rangecondi} >> ./temp/rangecompare.txt
   
     done < ./temp/rangecondi.txt
 else
@@ -71,28 +71,36 @@ paste ./counts/replicatemeans/${refsample}_${reftime}_${reftreat}_all.txt ./coun
 >./foldchange/${refsample}_${reftime}_${reftreat}_vs_${rangecondi}.txt
 echo "Comparing ${rangecompare}"
 
-  while read query ref 
+  while read ref query 
   do
-  echo ${query} ${ref}
+  echo -e "ReferenceVal:${ref} \nQueryVal:${query}"
+  
   
     if test $ref -eq 0
     then
       #awk 'BEGIN{FS="\t";}{$(($2 / ($1 + 0.1)))}'>> ./foldchange/${refsample}_${reftime}_${reftreat}_vs_${quersample}_${quertime}_${quertreat}.txt
       echo "${query} / (${ref} + 1)" | bc -l >> ./foldchange/${refsample}_${reftime}_${reftreat}_vs_${rangecondi}.txt
-      echo "${rangecondi} done (ref==0)"
+      echo "${rangecondi} (ref==0)"
       
     else
       #awk 'BEGIN{FS="\t";}{$(($2 / $1))}'>> ./foldchange/${refsample}_${reftime}_${reftreat}_vs_${quersample}_${quertime}_${quertreat}.txt
       echo "${query} / ${ref}" | bc -l >> ./foldchange/${refsample}_${reftime}_${reftreat}_vs_${rangecondi}.txt
-      echo "${rangecondi} done (ref!=0)"
+      echo "${rangecondi} (ref!=0)"
     fi
     
   done < ./temp/pastefoldchange.txt
 done < ./temp/rangecompare.txt
 
 #3. Paste them into .bedfile to create final fold changes
+echo "Pasting fold changes onto .bed file into RESULTS/FoldChanges dir"
+mkdir ./RESULTS/FoldChanges
 
+while read rangecompare
+do
 
+paste ./refseqdata/TriTrypDB-46_TcongolenseIL3000_2019.bed ./foldchange/${refsample}_${reftime}_${reftreat}_vs_${rangecompare}.txt > ./RESULTS/FoldChanges/${refsample}_${reftime}_${reftreat}_vs_${rangecompare}.txt
+
+done < ./temp/rangecompare.txt
 
 
 
