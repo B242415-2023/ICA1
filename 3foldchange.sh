@@ -2,6 +2,8 @@
 
 #1.User defined inputs
 #condition1
+echo "--------------------------------------------------------------------------------------------------------------------------"
+
 echo -e "Please use format (SampleType Time Treatment) and exact names as seen on Tco2.fqfiles\nReference Condition:"
 read refsample reftime reftreat
 
@@ -15,12 +17,14 @@ read range
 
 echo -e "${refsample}, ${reftime}, ${reftreat}\n${quersample}, ${quertime}, ${quertreat}\n ${range}"
 
-
+echo "--------------------------------------------------------------------------------------------------------------------------"
 #2. Fold change between reference and query
 mkdir foldchange
 >./temp/pastefoldchange.txt
 
 #2a. create index for condi ranges
+echo "Creating index for condition ranges..."
+
 >./temp/rangecompare.txt
 
 if test ${range} == "SampleType"
@@ -53,18 +57,19 @@ then
   
     done < ./temp/rangecondi.txt
 else
-  echo "Please input correct range."
+  echo "Please input valid range."
 fi
 
 
 
-#2b. reference index made by 2a to create fold changes for range
+#2b. reference index made by 2a to create fold changes for range then dividing
+echo "Calculating fold changes..."
 
 while read rangecondi
 do
 paste ./counts/replicatemeans/${refsample}_${reftime}_${reftreat}_all.txt ./counts/replicatemeans/${rangecondi}_all.txt > ./temp/pastefoldchange.txt
 >./foldchange/${refsample}_${reftime}_${reftreat}_vs_${rangecondi}.txt
-echo "$rangecompare"
+echo "Comparing ${rangecompare}"
 
   while read query ref 
   do
@@ -74,12 +79,12 @@ echo "$rangecompare"
     then
       #awk 'BEGIN{FS="\t";}{$(($2 / ($1 + 0.1)))}'>> ./foldchange/${refsample}_${reftime}_${reftreat}_vs_${quersample}_${quertime}_${quertreat}.txt
       echo "${query} / (${ref} + 1)" | bc -l >> ./foldchange/${refsample}_${reftime}_${reftreat}_vs_${rangecondi}.txt
-      echo "eq0"
+      echo "${rangecondi} done (ref==0)"
       
     else
       #awk 'BEGIN{FS="\t";}{$(($2 / $1))}'>> ./foldchange/${refsample}_${reftime}_${reftreat}_vs_${quersample}_${quertime}_${quertreat}.txt
       echo "${query} / ${ref}" | bc -l >> ./foldchange/${refsample}_${reftime}_${reftreat}_vs_${rangecondi}.txt
-      echo "!=0"
+      echo "${rangecondi} done (ref!=0)"
     fi
     
   done < ./temp/pastefoldchange.txt
