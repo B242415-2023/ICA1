@@ -79,7 +79,7 @@ echo "Comparing ${rangecompare}"
     if test $ref -eq 0
     then
       #awk 'BEGIN{FS="\t";}{$(($2 / ($1 + 0.1)))}'>> ./foldchange/${refsample}_${reftime}_${reftreat}_vs_${quersample}_${quertime}_${quertreat}.txt
-      echo "${query} / (${ref} + 1)" | bc -l >> ./foldchange/${refsample}_${reftime}_${reftreat}_vs_${rangecondi}.txt
+      echo "${query} / (${ref} + 0.1)" | bc -l >> ./foldchange/${refsample}_${reftime}_${reftreat}_vs_${rangecondi}.txt
       echo "${rangecondi} (ref==0)"
       
     else

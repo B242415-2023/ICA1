@@ -64,9 +64,6 @@ paste ./temp/report.txt ./temp/end1_pass.txt | paste - ./temp/end1_fail.txt | pa
 
 cp ./temp/reportfinal.txt ./RESULTS/fastqcSummaryReport.txt
 
-##############user input for no. of fails threshold to remove seq data?
-##############flag bad seq data and input base no. for trimming?
-
 #3. IMPORT T.congo GENOME SEQ AND .bed FILE INTO refseqdata and uncompress .gz
 echo "Importing refseq data..."
 
