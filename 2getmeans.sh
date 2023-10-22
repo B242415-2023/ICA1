@@ -131,7 +131,7 @@ denom=0
     denom=$((${denom} + 1))
     done
     
-  mean=echo "${sum} / ${denom}" | bc -l
+  mean=$((${sum} / ${denom}))
   echo "${sum} / ${denom}" | bc -l >> ./counts/replicatemeans/${reptotalindex}
   echo "Counts: ${gene}"
   echo "Sum: $sum"
