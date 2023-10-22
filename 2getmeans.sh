@@ -120,8 +120,8 @@ paste ./refseqdata/base.bed ./counts/replicatemeans/${reptotalindex} > ./RESULTS
 done < ./temp/reptotalindex.txt
 
 
-
-
+#3 Onto next step 3
+source ./3foldchange.sh
 
 
 

@@ -92,6 +92,9 @@ done < ./temp/fastqlist_base.txt
 
 
 
+#6. Onto next step 2getmeans.sh
+source ./2getmeans.sh
+
 #6. USER DEFINED GROUP SELECTIONS
 #avail groups: 
 #between replicates for variation
