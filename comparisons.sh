@@ -69,7 +69,7 @@ done < ./temp/searchdirindex.txt
 #1g. get means of each condition
 while read file
 do
-cat ./temp/search/${file} | awk '{FS=" ";}{print $1}' - > ./temp/${file}repgroups.txt
+cat ./temp/search/${file} | awk 'BEGIN{FS=" ";}{print $1}' - > ./temp/${file}_all.txt_repgroups.txt
 done < ./temp/searchdirindex.txt
 
 ls ./counts/reptotal > ./temp/reptotalindex.txt
@@ -78,24 +78,35 @@ mkdir ./counts/replicatemeans
 while read reptotalindex
 do
 sum=0
+denom=0
 >./counts/replicatemeans/${reptotalindex}
 
   while read gene
   do
   sum=0
-  
+  denom=0
+   
     for replicate in ${gene}
     do
     sum=$(($sum + $replicate))
+    denom=$((${denom} + 1))
     done
-  
-  echo $sum >> ./counts/replicatemeans/${reptotalindex}
-  echo ${gene}
-  echo ${reptotalindex}
+    
+  mean=$((${sum} / ${denom}))
+  echo $mean >> ./counts/replicatemeans/${reptotalindex}
+  echo "sum: $sum"
+  echo "deonom: $denom"
+  echo "gene: ${gene}"
+  echo "mean: ${mean}"
+  echo "repindex: ${reptotalindex}"
   
   done < ./counts/reptotal/${reptotalindex}
 done < ./temp/reptotalindex.txt
-########### divide by wc -l of Tco of grep reptotalindex fqfiles to get mean OR just wc or ./temp/${file}repgroups.txt
+
+
+#2.Selection of groups
+
+
 
 
 #2. User selected groups
@@ -112,7 +123,7 @@ done < ./temp/reptotalindex.txt
 #alignment scores from bowtie2 (bowtie2) >> file, then search for alignment scores and append to quality report
 #fold change beginning = 0, = fold change =inf, add small amount to denom BUT talk in report how that will inflate fold change
 #talk about normalization in report, even if not asked. relate to trans splicing
-# 
+# run.sh file to point towards everything
 
 
 
